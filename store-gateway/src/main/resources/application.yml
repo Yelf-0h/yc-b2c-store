@@ -1,0 +1,13 @@
+# 配置网关
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service # 路由规则的名称 只要不重复即可！推荐写成服务名
+          uri: lb://user-service # 路径的服务名称
+          predicates:
+            - Path=/user/**  # 访问user路径转发用户服务
+        - id: product-service # 此名称随意定义
+          uri: lb://product-service #使用负载均衡,调用服务名,这是服务名
+          predicates:
+            - Path=/product/** # 访问product相关,转发到product服务

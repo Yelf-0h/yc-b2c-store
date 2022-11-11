@@ -1,0 +1,11 @@
+server:
+  port: 3000 # 前端默认访问端口号为3000
+  servlet:
+    context-path: / # 前端默认访问的根路径
+spring:
+  application:
+    name: gateway-service  # 程序名就是服务名
+  cloud:
+    nacos:
+      # 如果注册中心不在本机,需要移到本位置,否则一致查找本地:8848端口!
+      server-addr: 192.168.68.230:8848 #注册中心

@@ -7,12 +7,129 @@
     <groupId>com.yecheng</groupId>
     <artifactId>yc-b2c-store</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>store-gateway</module>
+        <module>store-commons</module>
+    </modules>
     <packaging>pom</packaging>
 
+    <!--
+        父工程，不开发代码
+        通用依赖的添加
+        子模块的依赖管理
+        子模块的聚合和继承
+    -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.9.RELEASE</version>
+        <relativePath/>
+    </parent>
+
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Hoxton.SR10</spring-cloud.version>
+        <mysql.version>5.1.47</mysql.version>
+        <mybatis.version>2.1.1</mybatis.version>
+        <druid.version>1.2.5</druid.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+
     </properties>
+
+
+    <!-- spring cloud 和 spring cloud alibaba 和 mybatis 相关依赖管理-->
+    <dependencyManagement>
+
+        <dependencies>
+            <!-- springCloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--nacos的管理依赖-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.2.5.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- mysql驱动 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+            <!--mybatis-->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+
+    <!-- 后续子模块可能需要的依赖 -->
+    <!--    <dependency>-->
+    <!--        <groupId>org.springframework.boot</groupId>-->
+    <!--        <artifactId>spring-boot-starter-web</artifactId>-->
+    <!--    </dependency>-->
+
+    <!-- nacos 注册中心客户端依赖包 -->
+    <!--    <dependency>-->
+    <!--        <groupId>com.alibaba.cloud</groupId>-->
+    <!--        <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+    <!--    </dependency>-->
+    <!--    &lt;!&ndash;nacos 配置中心配置管理依赖&ndash;&gt;-->
+    <!--    <dependency>-->
+    <!--        <groupId>com.alibaba.cloud</groupId>-->
+    <!--        <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
+    <!--    </dependency>-->
+    <!-- feign依赖 -->
+    <!--    <dependency>-->
+    <!--        <groupId>org.springframework.cloud</groupId>-->
+    <!--        <artifactId>spring-cloud-starter-openfeign</artifactId>-->
+    <!--    </dependency>-->
+
+    <!-- feign相关依赖 -->
+    <!--    <dependency>-->
+    <!--        <groupId>io.github.openfeign</groupId>-->
+    <!--        <artifactId>feign-httpclient</artifactId>-->
+    <!--    </dependency>-->
+
+    <!--网关gateway依赖-->
+    <!--    <dependency>-->
+    <!--        <groupId>org.springframework.cloud</groupId>-->
+    <!--        <artifactId>spring-cloud-starter-gateway</artifactId>-->
+    <!--    </dependency>-->
+
+
+    <!-- lombok通用依赖引入 -->
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
