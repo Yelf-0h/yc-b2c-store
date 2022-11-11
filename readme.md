@@ -10,7 +10,7 @@
 ```git
 git clone https://github.com/Yelf-0h/yc-b2c-store.git
 ```
-## 2.好兄弟的仓库地址，进度比我快
-```git
+## 2.[好兄弟的仓库地址](https://github.com/cs001020/tagao_store_backEnd)，学习进度比我快
+
 https://github.com/cs001020/tagao_store_backEnd.git
-```
+
