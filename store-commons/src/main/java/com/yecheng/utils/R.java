@@ -1,19 +1,22 @@
 package com.yecheng.utils;
 
-
-import org.springframework.util.StringUtils;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
- * r
+ * description: 返回结果通用对象  Map
  *
  * @author Yefl
- * @date 2022/11/11
- * 返回结果通用对象  Map
+ * @date 2022/11/12
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class R {
 
     /**
@@ -29,99 +32,110 @@ public class R {
      */
     public static final String USER_NO_LOGIN = "401";
 
+
+    private String code;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String msg;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Object data;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long total;
+
+
     /**
      * 成功
      * @param msg
-     * @param key
      * @param data
      * @return
      */
-    public static Map ok(String msg,String key,Object data){
+    public static R ok(String msg,Object data,Long total){
 
-        return retMap(SUCCESS_CODE,msg,data,key);
+        return new R(SUCCESS_CODE,msg,data,total);
     }
 
     /**
      * 成功
-     * @param key
      * @param data
      * @return
      */
-    public static Map ok(String key,Object data){
+    public static R ok(String msg,Object data){
 
-        return retMap(SUCCESS_CODE,null,data,key);
+        return ok(msg,data,null);
     }
 
     /**
      * 成功
      * @return
      */
-    public static Map ok(String msg){
+    public static R ok(String msg){
 
-        return retMap(SUCCESS_CODE,msg,null,null);
+        return ok(msg,null);
     }
+
+
+    /**
+     * 成功
+     * @return
+     */
+    public static R ok(Object data){
+
+        return ok(null,data);
+    }
+
 
 
     /**
      * 失败
      * @param msg
-     * @param key
      * @param data
      * @return
      */
-    public static Map fail(String msg,String key,Object data){
+    public static R fail(String msg,Object data,Long total){
 
-        return retMap(FAIL_CODE,msg,data,key);
+        return new R(FAIL_CODE,msg,data,total);
     }
 
     /**
      * 失败
-     * @param key
      * @param data
      * @return
      */
-    public static Map fail(String key,Object data){
+    public static R fail(String msg,Object data){
 
-        return retMap(FAIL_CODE,null,data,key);
+        return fail(msg,data,null);
     }
 
     /**
      * 失败
      * @return
      */
-    public static Map fail(String msg){
+    public static R fail(String msg){
 
-        return retMap(FAIL_CODE,msg,null,null);
-
-    }
-
-    public static Map retMap(String code, String msg, Object data, String key){
-
-        Map map = new HashMap();
-        map.put("code",code);
-        if (!StringUtils.isEmpty(msg)){
-            map.put("msg",msg);
-        }
-
-        //自定义map数据传入 返回的key和值
-        if (data != null && !StringUtils.isEmpty(key)){
-            map.put(key,data);
-        }
-        return map;
+        return fail(msg,null);
     }
 
 
-    public static void main(String[] args) {
+    /**
+     * 失败
+     * @return
+     */
+    public static R fail(Object data){
 
-        Map map = retMap("001", null, "赵伟风", "user");
-
-        Map ok = ok("user", "赵伟风");
-        Map ok1 = ok("添加成功！");
-
-        System.out.println("map = " + map);
-
-
+        return fail(null,data);
     }
+
+
+    /**
+     * 未登录
+     * @return
+     */
+    public static R NO_LOGIN(){
+
+        return fail(USER_NO_LOGIN,"用户未登录!");
+    }
+
+
+
 
 
 

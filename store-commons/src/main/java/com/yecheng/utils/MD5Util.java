@@ -5,11 +5,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * md5跑龙套
+ *
  * 简单md5工具类
  *
  * @author Yefl
- * @date 2022/11/11
+ * @date 2022/11/12
  */
 
 public class MD5Util {
