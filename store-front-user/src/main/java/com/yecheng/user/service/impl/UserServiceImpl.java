@@ -94,7 +94,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         /* 3.判断user是否查到 */
         if (Objects.isNull(user)){
             log.info("UserServiceImpl.login业务结束，结果为：{}","账号或者密码错误！");
-            R.fail("账号或者密码错误！");
+            return R.fail("账号或者密码错误！");
         }
         log.info("UserServiceImpl.login业务结束，结果为：{}","登录成功！");
         user.setUserPhonenumber(null);
