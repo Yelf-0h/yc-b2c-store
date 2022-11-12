@@ -15,3 +15,11 @@ spring:
           uri: lb://static-service
           predicates:
             - Path=/public/**
+        - id: carousel-service
+          uri: lb://carousel-service
+          predicates:
+            - Path=/carousel/**
+        - id: category-service
+          uri: lb://category-service
+          predicates:
+            - Path=/category/**

@@ -13,6 +13,8 @@
         <module>store-front-user</module>
         <module>store-static</module>
         <module>store-front-carousel</module>
+        <module>store-front-product</module>
+        <module>store-front-category</module>
     </modules>
     <packaging>pom</packaging>
 
