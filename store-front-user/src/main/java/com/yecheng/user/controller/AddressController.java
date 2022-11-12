@@ -63,6 +63,7 @@ public class AddressController {
      */
     @PostMapping("/remove")
     public R remove(@RequestBody @Validated AddressRemoveParam removeParam, BindingResult result){
+
         if (result.hasErrors()){
             return R.fail("参数异常，删除失败！");
         }

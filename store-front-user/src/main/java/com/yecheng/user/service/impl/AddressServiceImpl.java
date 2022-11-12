@@ -28,6 +28,7 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
         /* 1.根据userId这条件查询数据库列表 */
         List<Address> addressList = lambdaQuery().eq(Address::getUserId, userId).list();
 
+
         /* 2.结果封装 */
         R ok = R.ok("查询成功", addressList);
         log.info("AddressServiceImpl.list业务结束，结果为：{}",ok);

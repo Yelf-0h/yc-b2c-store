@@ -11,3 +11,7 @@ spring:
           uri: lb://product-service #使用负载均衡,调用服务名,这是服务名
           predicates:
             - Path=/product/** # 访问product相关,转发到product服务
+        - id: static-service
+          uri: lb://static-service
+          predicates:
+            - Path=/public/**

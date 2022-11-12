@@ -1,0 +1,6 @@
+#spring:
+#  mvc:
+#    # 配置静态资源可以被访问！springboot默认有public地址的配置，这里可不配
+#    static-path-pattern: /public/**
+#  resources:
+#    static-locations: classpath:/public/
