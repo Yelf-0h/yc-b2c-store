@@ -23,3 +23,7 @@ spring:
           uri: lb://category-service
           predicates:
             - Path=/category/**
+        - id: search-service
+          uri: lb://search-service
+          predicates:
+            - Path=/search/**

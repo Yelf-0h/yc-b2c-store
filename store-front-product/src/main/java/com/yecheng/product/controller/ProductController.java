@@ -1,9 +1,6 @@
 package com.yecheng.product.controller;
 
-import com.yecheng.param.ProductHotsParam;
-import com.yecheng.param.ProductIdParam;
-import com.yecheng.param.ProductIdsParam;
-import com.yecheng.param.ProductPromoParam;
+import com.yecheng.param.*;
 import com.yecheng.product.service.ProductService;
 import com.yecheng.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +74,11 @@ public class ProductController {
         }
         return productService.pictures(productIdParam.getProductID());
     }
+
+    @PostMapping("/search")
+    public R search(@RequestBody ProductSearchParam productSearchParam){
+        return productService.search(productSearchParam);
+    }
+
 
 }

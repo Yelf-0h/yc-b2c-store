@@ -3,6 +3,7 @@ package com.yecheng.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yecheng.param.ProductHotsParam;
 import com.yecheng.param.ProductIdsParam;
+import com.yecheng.param.ProductSearchParam;
 import com.yecheng.pojo.Product;
 import com.yecheng.utils.R;
 
@@ -66,4 +67,19 @@ public interface ProductService extends IService<Product> {
      * @return {@link R}
      */
     R pictures(Integer productID);
+
+    /**
+     * 搜索服务调用，查询全部商品信息
+     * 进行同步
+     * @return {@link List}<{@link Product}>
+     */
+    List<Product> allList();
+
+    /**
+     * 搜索业务，需要调用搜索服务
+     *
+     * @param productSearchParam 产品搜索参数
+     * @return {@link R}
+     */
+    R search(ProductSearchParam productSearchParam);
 }

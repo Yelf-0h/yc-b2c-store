@@ -2,8 +2,10 @@ package com.yecheng.product.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yecheng.clients.CategoryClient;
+import com.yecheng.clients.SearchClient;
 import com.yecheng.param.ProductHotsParam;
 import com.yecheng.param.ProductIdsParam;
+import com.yecheng.param.ProductSearchParam;
 import com.yecheng.pojo.Category;
 import com.yecheng.pojo.Picture;
 import com.yecheng.product.service.PictureService;
@@ -34,6 +36,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
      */
     @Autowired
     private CategoryClient categoryClient;
+
+    @Autowired
+    private SearchClient searchClient;
 
     @Autowired
     private PictureService pictureService;
@@ -152,5 +157,31 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         R ok = R.ok(pictures);
         log.info("ProductServiceImpl.pictures业务结束，结果为：{}",ok);
         return ok;
+    }
+
+    /**
+     * 搜索服务调用，查询全部商品信息
+     * 进行同步
+     *
+     * @return {@link List}<{@link Product}>
+     */
+    @Override
+    public List<Product> allList() {
+        List<Product> list = list();
+        log.info("ProductServiceImpl.allList业务结束，结果为：{}",list.size());
+        return list;
+    }
+
+    /**
+     * 搜索业务，需要调用搜索服务
+     *
+     * @param productSearchParam 产品搜索参数
+     * @return {@link R}
+     */
+    @Override
+    public R search(ProductSearchParam productSearchParam) {
+        R r = searchClient.searchProduct(productSearchParam);
+        log.info("ProductServiceImpl.search业务结束，结果为：{}",r);
+        return r;
     }
 }
