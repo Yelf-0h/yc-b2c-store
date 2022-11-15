@@ -20,7 +20,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("product_picture")
-public class Picture  {
+public class Picture implements Serializable {
+    public static final Long serialVersionUID = 1L;
     @TableId(type = IdType.AUTO)
     private Integer id;
     @JsonProperty("product_id")

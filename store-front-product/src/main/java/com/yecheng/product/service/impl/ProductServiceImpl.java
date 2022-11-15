@@ -12,6 +12,7 @@ import com.yecheng.product.service.PictureService;
 import com.yecheng.utils.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yecheng.product.mapper.ProductMapper;
@@ -52,6 +53,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
      * @return {@link R}
      */
     @Override
+    @Cacheable(value = "list.product",key = "#categoryName",cacheManager = "cacheManagerHour")
     public R promoList(String categoryName) {
         /* 1. 根据类别名称 调用 feign客户端访问类别服务获取类别的数据 */
         R r = categoryClient.byName(categoryName);
@@ -81,6 +83,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
      * @return {@link R}
      */
     @Override
+    @Cacheable(value = "list.product",key = "#productHotsParam.categoryName")
     public R hotsList(ProductHotsParam productHotsParam) {
         /* 1. 调用类别服务 */
         R r = categoryClient.hotsCategory(productHotsParam);
@@ -106,6 +109,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
      * @return {@link R}
      */
     @Override
+    @Cacheable(value = "list.category",key = "#root.methodName",cacheManager = "cacheManagerDay")
     public R categoryList() {
         R r = categoryClient.listCategory();
         log.info("ProductServiceImpl.categoryList业务结束，结果为：{}",r);
@@ -119,6 +123,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
      * @return {@link R}
      */
     @Override
+    @Cacheable(value = "list.product",key = "#productIdsParam.categoryID+'-'+#productIdsParam.currentPage+'-'+#productIdsParam.pageSize")
     public R byCategory(ProductIdsParam productIdsParam) {
         List<Integer> categoryID = productIdsParam.getCategoryID();
         Integer currentPage = productIdsParam.getCurrentPage();
@@ -138,6 +143,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
      * @return {@link R}
      */
     @Override
+    @Cacheable(value = "product",key = "#productID")
     public R detail(Integer productID) {
         Product product = getById(productID);
         R ok = R.ok(product);
@@ -152,6 +158,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
      * @return {@link R}
      */
     @Override
+    @Cacheable(value = "picture",key = "#productID")
     public R pictures(Integer productID) {
         List<Picture> pictures = pictureService.lambdaQuery().eq(Picture::getProductId, productID).list();
         R ok = R.ok(pictures);
