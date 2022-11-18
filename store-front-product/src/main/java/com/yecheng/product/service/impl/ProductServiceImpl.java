@@ -191,4 +191,32 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         log.info("ProductServiceImpl.search业务结束，结果为：{}",r);
         return r;
     }
+
+    /**
+     * 根据产品id集合查询商品信息
+     *
+     * @param productIds 产品id
+     * @return {@link R}
+     */
+    @Cacheable(value = "list.product",key = "#productIds")
+    @Override
+    public R productIds(List<Integer> productIds) {
+        List<Product> productList = listByIds(productIds);
+        R ok = R.ok("类别信息查询成功！", productList);
+        log.info("ProductServiceImpl.productIds业务结束，结果为：{}",ok);
+        return ok;
+    }
+
+    /**
+     * 购物车列表,根据ids查询商品集合
+     *
+     * @param productIds 产品id
+     * @return {@link List}<{@link Product}>
+     */
+    @Override
+    public List<Product> cartList(List<Integer> productIds) {
+        List<Product> list = lambdaQuery().in(Product::getProductId, productIds).list();
+        log.info("ProductServiceImpl.cartList业务结束，结果为：{}",list);
+        return list;
+    }
 }

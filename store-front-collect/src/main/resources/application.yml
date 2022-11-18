@@ -1,13 +1,11 @@
 spring:
   # 连接池配置
   datasource:
-    url: jdbc:mysql://localhost:3306/store_carousel?useSSL=false
+    url: jdbc:mysql://localhost:3306/store_collect?useSSL=false
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-  profiles:
-    active: cache
 mybatis-plus:
   mapper-locations: classpath:mappers/*.xml
   configuration:
@@ -15,12 +13,12 @@ mybatis-plus:
     auto-mapping-behavior: full
     lazy-loading-enabled: true
     aggressive-lazy-loading: false
-  type-aliases-package: com.yecheng.pojo #设置别名
+  type-aliases-package: com.yecheng.pojo #设置别名a
 ribbon:
   eager-load:
     enabled: true #开启饥饿加载提升第一次访问速度
     clients:
-      - carousel-service #指定开启服务
+      - collect-service #指定开启服务
 feign:
   httpclient:
     enabled: true  # 开启httpClient开关,启动连接池,提升feign连接效率!

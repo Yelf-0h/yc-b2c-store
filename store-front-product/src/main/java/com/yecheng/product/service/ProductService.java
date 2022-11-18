@@ -82,4 +82,20 @@ public interface ProductService extends IService<Product> {
      * @return {@link R}
      */
     R search(ProductSearchParam productSearchParam);
+
+    /**
+     * 根据产品id集合查询商品信息
+     *
+     * @param productIds 产品id
+     * @return {@link R}
+     */
+    R productIds(List<Integer> productIds);
+
+    /**
+     * 购物车列表,根据ids查询商品集合
+     *
+     * @param productIds 产品id
+     * @return {@link List}<{@link Product}>
+     */
+    List<Product> cartList(List<Integer> productIds);
 }

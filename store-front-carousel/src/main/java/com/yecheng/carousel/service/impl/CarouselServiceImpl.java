@@ -2,6 +2,7 @@ package com.yecheng.carousel.service.impl;
 
 import com.yecheng.utils.R;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yecheng.carousel.mapper.CarouselMapper;
@@ -28,6 +29,7 @@ public class CarouselServiceImpl extends ServiceImpl<CarouselMapper, Carousel> i
      * @return {@link R}
      */
     @Override
+    @Cacheable(value = "list.carousel",key = "#root.methodName",cacheManager = "cacheManagerDay")
     public R carouselList() {
         /* 按照优先级查询数据库数据 */
         List<Carousel> carouselList = lambdaQuery().orderByDesc(Carousel::getPriority).list();
