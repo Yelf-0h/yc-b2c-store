@@ -1,5 +1,6 @@
 package com.yecheng.cart.service.impl;
 
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.yecheng.clients.ProductClient;
 import com.yecheng.param.CartListParam;
 import com.yecheng.param.CartSaveParam;
@@ -107,5 +108,48 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
         R ok = R.ok("数据库数据查询成功！", cartVos);
         log.info("CartServiceImpl.listCart业务结束，结果为：{}",ok);
         return ok;
+    }
+
+    /**
+     * 更新购物车
+     *
+     * @param cartSaveParam 购物车保存参数
+     * @return
+     */
+    @Override
+    public R updateCart(CartSaveParam cartSaveParam) {
+        ProductIdParam idParam = new ProductIdParam();
+        idParam.setProductID(cartSaveParam.getProductId());
+        Product product = productClient.cartDetail(idParam);
+        /*判断库存是否足够*/
+        if (cartSaveParam.getNum()>product.getProductNum()){
+            log.info("CartServiceImpl.updateCart业务结束，结果为：{}","库存不足，修改失败！");
+            return R.fail("库存不足，修改失败！");
+        }
+        /*修改数据*/
+        Cart cart = lambdaQuery().eq(Cart::getUserId, cartSaveParam.getUserId())
+                .eq(Cart::getProductId, cartSaveParam.getProductId()).one();
+        cart.setNum(cartSaveParam.getNum());
+        boolean b = updateById(cart);
+        log.info("CartServiceImpl.updateCart业务结束，结果为：{}",b);
+        return R.ok("修改数量成功！");
+    }
+
+    /**
+     * 删除购物车
+     *
+     * @param cartSaveParam 购物车保存参数
+     * @return {@link R}
+     */
+    @Override
+    public R removeCart(CartSaveParam cartSaveParam) {
+        LambdaQueryChainWrapper<Cart> eq = lambdaQuery().eq(Cart::getUserId, cartSaveParam.getUserId())
+                .eq(Cart::getProductId, cartSaveParam.getProductId());
+        boolean remove = remove(eq);
+        if (!remove) {
+            return R.fail("删除失败！");
+        }
+        log.info("CartServiceImpl.removeCart业务结束，结果为：{}","成功删除此购物车项！");
+        return R.ok("成功删除此购物车项！");
     }
 }

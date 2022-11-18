@@ -29,4 +29,20 @@ public interface CartService extends IService<Cart> {
      * @return {@link R}
      */
     R listCart(CartListParam cartListParam);
+
+    /**
+     * 更新购物车
+     *
+     * @param cartSaveParam 购物车保存参数
+     * @return
+     */
+    R updateCart(CartSaveParam cartSaveParam);
+
+    /**
+     * 删除购物车
+     *
+     * @param cartSaveParam 购物车保存参数
+     * @return {@link R}
+     */
+    R removeCart(CartSaveParam cartSaveParam);
 }

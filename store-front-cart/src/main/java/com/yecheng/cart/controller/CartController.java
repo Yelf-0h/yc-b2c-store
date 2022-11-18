@@ -37,6 +37,22 @@ public class CartController {
         return cartService.listCart(cartListParam);
     }
 
+    @PostMapping("/update")
+    public R updateCart(@RequestBody @Validated CartSaveParam cartSaveParam,BindingResult result){
+        if (result.hasErrors()) {
+            return R.fail("参数异常，修改失败！");
+        }
+        return cartService.updateCart(cartSaveParam);
+
+    }
+
+    @PostMapping("/remove")
+    public R removeCart(@RequestBody @Validated CartSaveParam cartSaveParam,BindingResult result){
+        if (result.hasErrors()) {
+            return R.fail("参数异常，删除失败！");
+        }
+        return cartService.removeCart(cartSaveParam);
+    }
 
 
 
