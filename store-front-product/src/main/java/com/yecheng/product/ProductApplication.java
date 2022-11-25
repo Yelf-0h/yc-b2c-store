@@ -3,8 +3,7 @@ package com.yecheng.product;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.yecheng.clients.CategoryClient;
-import com.yecheng.clients.SearchClient;
+import com.yecheng.clients.*;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +18,9 @@ import org.springframework.context.annotation.Bean;
  */
 @SpringBootApplication
 @MapperScan("com.yecheng.product.mapper")
-@EnableFeignClients(clients = {CategoryClient.class, SearchClient.class})
+@EnableFeignClients(clients = {CategoryClient.class,
+        SearchClient.class, CartClient.class,
+        OrderClient.class, CollectClient.class})
 @EnableCaching
 public class ProductApplication {
 

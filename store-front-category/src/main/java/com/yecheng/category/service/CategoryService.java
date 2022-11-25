@@ -1,6 +1,7 @@
 package com.yecheng.category.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yecheng.param.PageParam;
 import com.yecheng.pojo.Category;
 import com.yecheng.utils.R;
 
@@ -36,4 +37,36 @@ public interface CategoryService extends IService<Category> {
      * @return {@link R}
      */
     R listCategory();
+
+    /**
+     * 分类分页数据
+     *
+     * @param pageParam 页面参数
+     * @return {@link R}
+     */
+    R pageCategory(PageParam pageParam);
+
+    /**
+     * 添加类别
+     *
+     * @param category 类别
+     * @return {@link R}
+     */
+    R saveCategory(Category category);
+
+    /**
+     * 删除类别
+     *
+     * @param categoryId 类别id
+     * @return {@link R}
+     */
+    R removeCategory(Integer categoryId);
+
+    /**
+     * 更新类别
+     *
+     * @param category 类别
+     * @return {@link R}
+     */
+    R updateCategory(Category category);
 }

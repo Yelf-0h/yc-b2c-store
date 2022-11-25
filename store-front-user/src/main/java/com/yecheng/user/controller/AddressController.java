@@ -2,6 +2,7 @@ package com.yecheng.user.controller;
 
 import com.yecheng.param.AddressListParam;
 import com.yecheng.param.AddressRemoveParam;
+import com.yecheng.param.AddressSaveParam;
 import com.yecheng.pojo.Address;
 import com.yecheng.user.service.AddressService;
 import com.yecheng.utils.R;
@@ -40,17 +41,21 @@ public class AddressController {
     }
 
     /**
+     * 保存
      * 保存添加地址
      *
-     * @param address 地址
-     * @param result  结果
+     * @param result           结果
+     * @param addressSaveParam 地址保存参数
      * @return {@link R}
      */
     @PostMapping("/save")
-    public R save(@RequestBody @Validated Address address, BindingResult result){
+    public R save(@RequestBody @Validated AddressSaveParam addressSaveParam, BindingResult result){
         if (result.hasErrors()){
             return R.fail("参数异常，添加失败！");
         }
+        Address address = addressSaveParam.getAdd();
+        address.setUserId(addressSaveParam.getUserId());
+
         return addressService.saveByBean(address);
     }
 

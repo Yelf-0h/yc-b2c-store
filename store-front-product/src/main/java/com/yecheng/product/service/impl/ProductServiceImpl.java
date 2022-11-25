@@ -1,26 +1,27 @@
 package com.yecheng.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yecheng.clients.CategoryClient;
-import com.yecheng.clients.SearchClient;
-import com.yecheng.param.ProductHotsParam;
-import com.yecheng.param.ProductIdsParam;
-import com.yecheng.param.ProductSearchParam;
+import com.yecheng.clients.*;
+import com.yecheng.param.*;
 import com.yecheng.pojo.Category;
 import com.yecheng.pojo.Picture;
 import com.yecheng.product.service.PictureService;
 import com.yecheng.utils.R;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yecheng.product.mapper.ProductMapper;
 import com.yecheng.pojo.Product;
 import com.yecheng.product.service.ProductService;
+import org.springframework.util.StringUtils;
 
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * (Product)表服务实现类
@@ -37,12 +38,16 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
      */
     @Autowired
     private CategoryClient categoryClient;
-
     @Autowired
     private SearchClient searchClient;
-
     @Autowired
     private PictureService pictureService;
+    @Autowired
+    private CartClient cartClient;
+    @Autowired
+    private OrderClient orderClient;
+    @Autowired
+    private CollectClient collectClient;
 
     /**
      * 单类别名称 查询热门商品 至多7条
@@ -218,5 +223,140 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         List<Product> list = lambdaQuery().in(Product::getProductId, productIds).list();
         log.info("ProductServiceImpl.cartList业务结束，结果为：{}",list);
         return list;
+    }
+
+    /**
+     * 修改库存，增加销售量
+     *
+     * @param orderToProductParamList 产品参数列表
+     */
+    @Override
+    public void subNumber(List<OrderToProductParam> orderToProductParamList) {
+        /* 将集合转成map productId orderToProduct */
+        Map<Integer, OrderToProductParam> map = orderToProductParamList.stream().collect(Collectors.toMap(OrderToProductParam::getProductId, v -> v));
+        /* 获取商品的id集合 */
+        Set<Integer> productIds = map.keySet();
+        /* 查询集合对应的商品集合 */
+        List<Product> productList = listByIds(productIds);
+        /* 修改商品信息 */
+        List<Product> products = productList.stream().map(product -> {
+            Integer num = map.get(product.getProductId()).getNum();
+            product.setProductNum(product.getProductNum() - num);
+            product.setProductSales(product.getProductSales() + num);
+            return product;
+        }).collect(Collectors.toList());
+
+        /* 批量更新方法 */
+        updateBatchById(products);
+    }
+
+    /**
+     * 类别服务调用管理调用
+     *
+     * @param categoryId 类别id
+     * @return {@link Long}
+     */
+    @Override
+    public Long categoryCount(Integer categoryId) {
+        Long count = lambdaQuery().eq(Product::getCategoryId, categoryId).count();
+        log.info("ProductServiceImpl.categoryCount业务结束，结果为：{}",count);
+        return count;
+    }
+
+    /**
+     * 保存商品信息
+     * 1.保存商品信息
+     * 2.保存商品图片信息
+     * 3.发送消息,es库进行插入
+     *
+     * @param productSaveParam 产品保存参数
+     * @return {@link R}
+     */
+    @Override
+    public R saveProduct(ProductSaveParam productSaveParam) {
+        Product product = new Product();
+        BeanUtils.copyProperties(productSaveParam,product);
+        /* 保存 */
+        boolean save = save(product);
+        if (!save){
+            log.info("ProductServiceImpl.saveProduct业务结束，结果为：{}","添加商品失败！");
+            return R.fail("添加商品失败！");
+        }
+
+        /* 获取图片地址串进行截取 +分割的 */
+        String pictures = productSaveParam.getPictures();
+        if (!StringUtils.isEmpty(pictures)) {
+            /* $ + - * | / ？^符号在正则表达示中有相应的不同意义。
+               一般来讲只需要加[]、或是\\即可 */
+            String[] urls = pictures.split("[+]");
+            List<Picture> pictureList = new ArrayList<>();
+            for (String url : urls) {
+                Picture picture = new Picture();
+                picture.setProductId(product.getProductId());
+                picture.setProductPicture(url);
+                pictureList.add(picture);
+            }
+            boolean b = pictureService.saveBatch(pictureList);
+        }
+        /* 同步搜索服务里的数据 */
+        searchClient.saveOrUpdateProduct(product);
+
+        return R.ok("添加商品数据成功！");
+    }
+
+    /**
+     * 更新产品信息
+     *
+     * @param product 产品
+     * @return {@link R}
+     */
+    @Override
+    public R updateProduct(Product product) {
+        boolean b = updateById(product);
+        if (!b) {
+            return R.fail("修改商品信息失败！");
+        }
+        searchClient.saveOrUpdateProduct(product);
+        R ok = R.ok("修改商品信息成功！");
+        log.info("ProductServiceImpl.updateProduct业务结束，结果为：{}",ok);
+        return ok;
+    }
+
+    /**
+     * 删除产品, 后台管理调用
+     *
+     * @param productId 产品id
+     * @return {@link R}
+     */
+    @Override
+    public R removeProduct(Integer productId) {
+        /* 检查是否存在引用此商品的购物车 */
+        Long checkCart = cartClient.adminCheckCart(productId);
+        /* 检查是否存在引用此商品的订单 */
+        Long checkOrder = orderClient.adminCheckOrder(productId);
+        if (checkCart > 0){
+            log.info("ProductServiceImpl.removeProduct业务结束，结果为删除商品失败！：{}个购物车项包含此商品",checkCart);
+            return R.fail("删除商品失败！有："+checkCart+"个购物车项包含此商品！");
+        }
+        if (checkOrder > 0){
+            log.info("ProductServiceImpl.removeProduct业务结束，结果为删除商品失败！：{}个订单包含此商品",checkOrder);
+            return R.fail("删除商品失败！有："+checkOrder+"个订单包含此商品！");
+        }
+        /* 删除收藏 */
+        R r = collectClient.adminRemoveCollect(productId);
+        log.info("ProductServiceImpl.removeProduct业务结束，删除收藏结果为：{}",r);
+        /* 删除商品 */
+        boolean b = removeById(productId);
+        if (!b){
+            return R.fail("删除商品失败！");
+        }
+        /* 删除详情图 */
+        LambdaQueryWrapper<Picture> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Picture::getProductId,productId);
+        pictureService.remove(wrapper);
+        /* 删除es中缓存 */
+        searchClient.removeProduct(productId);
+        log.info("ProductServiceImpl.removeProduct业务结束，结果为：{}","删除商品成功！");
+        return R.ok("删除商品成功！");
     }
 }

@@ -1,6 +1,8 @@
 package com.yecheng.clients;
 
+import com.yecheng.param.PageParam;
 import com.yecheng.param.ProductHotsParam;
+import com.yecheng.pojo.Category;
 import com.yecheng.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,4 +43,41 @@ public interface CategoryClient {
      */
     @GetMapping("/category/list")
     R listCategory();
+
+    /**
+     * 类别的分页数据
+     *
+     * @param pageParam 页面参数
+     * @return {@link R}
+     */
+    @PostMapping("/category/admin/list")
+    R adminPageCategory(@RequestBody PageParam pageParam);
+
+
+    /**
+     * 保存类别
+     *
+     * @param category 类别
+     * @return {@link R}
+     */
+    @PostMapping("/category/admin/save")
+    R adminSaveCategory(@RequestBody Category category);
+
+    /**
+     * 删除类别 后台管理模块调用
+     *
+     * @param categoryId 类别id
+     * @return {@link R}
+     */
+    @PostMapping("/category/admin/remove")
+    R adminRemoveCategory(@RequestBody Integer categoryId);
+
+    /**
+     * 更新类别 后台管理模块调用
+     *
+     * @param category 类别
+     * @return {@link R}
+     */
+    @PostMapping("/category/admin/update")
+    R adminUpdateCategory(@RequestBody Category category);
 }

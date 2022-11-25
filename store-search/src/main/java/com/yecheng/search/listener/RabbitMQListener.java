@@ -20,12 +20,14 @@ import java.io.IOException;
 
 /**
  * 监听消息通知
+ * 最后采取同步方法
  *
  * @author Yelf
  * @create 2022-11-13-20:46
  * @date 2022/11/13
  */
 @Component
+@Deprecated
 public class RabbitMQListener {
 
     @Autowired

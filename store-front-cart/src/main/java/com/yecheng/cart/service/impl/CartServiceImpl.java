@@ -152,4 +152,28 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
         log.info("CartServiceImpl.removeCart业务结束，结果为：{}","成功删除此购物车项！");
         return R.ok("成功删除此购物车项！");
     }
+
+    /**
+     * 清空对应id的购物车项
+     *
+     * @param cartIds 购物车id
+     */
+    @Override
+    public void clearIds(List<Integer> cartIds) {
+        removeBatchByIds(cartIds);
+        log.info("CartServiceImpl.clearIds业务结束，结果为：{} 以上id删除",cartIds);
+    }
+
+    /**
+     * 检查购物车是否有正在使用该商品的
+     *
+     * @param productId 产品id
+     * @return {@link Long}
+     */
+    @Override
+    public Long checkCart(Integer productId) {
+        Long count = lambdaQuery().eq(Cart::getProductId, productId).count();
+        log.info("CartServiceImpl.checkCart业务结束，结果为：{}",count);
+        return count;
+    }
 }

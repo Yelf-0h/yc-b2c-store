@@ -84,4 +84,20 @@ public class CollectServiceImpl extends ServiceImpl<CollectMapper, Collect> impl
         log.info("CollectServiceImpl.removeCollect业务结束，结果为：{}","收藏移除成功");
         return R.ok("收藏移除成功！");
     }
+
+    /**
+     * 删除收藏根据pid，，后台管理模块删除商品服务调用
+     *
+     * @param productId 产品id
+     * @return {@link R}
+     */
+    @Override
+    public R removeByPID(Integer productId) {
+        LambdaQueryChainWrapper<Collect> eq = lambdaQuery().eq(Collect::getProductId, productId);
+        boolean remove = remove(eq);
+        if (!remove){
+            return R.fail("删除收藏失败！");
+        }
+        return R.ok("删除收藏成功！");
+    }
 }

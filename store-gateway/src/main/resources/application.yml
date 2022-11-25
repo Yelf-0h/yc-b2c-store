@@ -35,3 +35,11 @@ spring:
           uri: lb://cart-service
           predicates:
             - Path=/cart/**
+        - id: order-service  # 订单服务
+          uri: lb://order-service
+          predicates:
+            - Path=/order/**
+        - id: admin-service  # 后台管理服务
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin/**

@@ -6,6 +6,8 @@ spring:
     password: root
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+  profiles:
+    active: mq
 mybatis-plus:
   mapper-locations: classpath:mappers/*.xml
   configuration:

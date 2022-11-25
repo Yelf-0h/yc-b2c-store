@@ -6,6 +6,8 @@ import com.yecheng.param.CartSaveParam;
 import com.yecheng.pojo.Cart;
 import com.yecheng.utils.R;
 
+import java.util.List;
+
 /**
  * (Cart)表服务接口
  *
@@ -45,4 +47,19 @@ public interface CartService extends IService<Cart> {
      * @return {@link R}
      */
     R removeCart(CartSaveParam cartSaveParam);
+
+    /**
+     * 清空对应id的购物车项
+     *
+     * @param cartIds 购物车id
+     */
+    void clearIds(List<Integer> cartIds);
+
+    /**
+     * 检查购物车是否有正在使用该商品的
+     *
+     * @param productId 产品id
+     * @return {@link Long}
+     */
+    Long checkCart(Integer productId);
 }

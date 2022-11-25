@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/lib/layui-v2.6.3/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/css/public.css}" media="all">
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="eidt">
+    <div class="layui-form-item" >
+        <label class="layui-form-label required">id</label>
+        <div class="layui-input-block">
+            <input id="productId" readonly="readonly" type="text" name="productId" value="" class="layui-input">
+            <tip>id不可修改</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商品名</label>
+        <div class="layui-input-block">
+            <input id="productName"  type="text" name="productName" lay-verify="required" lay-reqtext="商品名不能为空" placeholder="请输入商品名!" value="" class="layui-input">
+            <tip>商品名</tip>
+        </div>
+    </div>
+    <div class="layui-form-item" >
+        <label class="layui-form-label required">商品title</label>
+        <div class="layui-input-block">
+            <input id="productTitle" type="text" name="productTitle" placeholder="商品title!" value="" class="layui-input">
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">市场价格</label>
+        <div class="layui-input-block">
+            <input id="productPrice" type="number" name="productPrice" lay-verify="required" lay-reqtext="" placeholder="市场价格" value="" class="layui-input">
+        </div>
+    </div>
+
+    <input type="hidden" id="productPicture" name="productPicture">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商城价格</label>
+        <div class="layui-input-block">
+            <input id="productSellingPrice" type="number" name="productSellingPrice" lay-verify="required" lay-reqtext="" placeholder="商城价格" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品类别</label>
+        <div class="layui-input-block">
+            <select name="categoryId" >
+                <option value="">-------</option>
+                <option th:each="item : ${clist}"
+                        th:value="${item.categoryId}"
+                        th:text="${item.categoryName}"
+                        th:selected="${#strings.equals(item.categoryId,param.categoryId)}"
+                ></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商品库存</label>
+        <div class="layui-input-block">
+            <input id="productNum" type="number" name="productNum" lay-verify="required" lay-reqtext="" placeholder="商品库存" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商品销售量</label>
+        <div class="layui-input-block">
+            <input id="productSales" type="number" name="productSales" placeholder="商品销售量" value="" class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">商品描述</label>
+        <div class="layui-input-block">
+            <input id="productIntro" type="text" name="productIntro" placeholder="商品描述" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认修改</button>
+        </div>
+    </div>
+
+</div>
+</div>
+<script th:src="@{/lib/layui-v2.6.3/layui.js}" charset="utf-8"></script>
+<!--<script th:src="@{/lib/jquery-3.4.1/jquery-3.4.1.min.js}"></script>-->
+<script>
+    window.onload=function (e){
+        console.log(e)
+    }
+
+
+    layui.use(['form','upload'], function (obj) {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$,
+            upload = layui.upload;
+
+
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var index = layer.alert("点击确认修改", {
+                title: '确认提交'
+            }, function () {
+                $.post({
+                    url:"/admin/product/update",
+                    data:data.field,
+                    success:function (data){
+                        layer.msg(data.msg);
+                        // 关闭弹出层
+                        layer.close(index);
+                        var iframeIndex = parent.layer.getFrameIndex(window.name);
+                        // 关闭后刷新父页面
+                        parent.location.reload();
+                        parent.layer.close(iframeIndex);
+                    }
+                })
+
+            });
+
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

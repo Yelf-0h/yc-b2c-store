@@ -2,6 +2,8 @@ package com.yecheng.pojo;
 
 
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.IdType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @TableName("cart")
 public class Cart implements Serializable {
     public static final Long serialVersionUID = 1L;
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     

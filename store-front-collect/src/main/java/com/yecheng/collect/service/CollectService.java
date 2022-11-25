@@ -36,4 +36,12 @@ public interface CollectService extends IService<Collect> {
      * @return {@link R}
      */
     R removeCollect(Collect collect);
+
+    /**
+     * 删除收藏根据pid，，后台管理模块删除商品服务调用
+     *
+     * @param productId 产品id
+     * @return {@link R}
+     */
+    R removeByPID(Integer productId);
 }

@@ -7,7 +7,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
   profiles:
-    active: cache
+    active: cache,mq
 
 mybatis-plus:
   mapper-locations: classpath:mappers/*.xml

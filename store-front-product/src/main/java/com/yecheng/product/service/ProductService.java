@@ -1,9 +1,7 @@
 package com.yecheng.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yecheng.param.ProductHotsParam;
-import com.yecheng.param.ProductIdsParam;
-import com.yecheng.param.ProductSearchParam;
+import com.yecheng.param.*;
 import com.yecheng.pojo.Product;
 import com.yecheng.utils.R;
 
@@ -98,4 +96,45 @@ public interface ProductService extends IService<Product> {
      * @return {@link List}<{@link Product}>
      */
     List<Product> cartList(List<Integer> productIds);
+
+    /**
+     * 修改库存，增加销售量
+     *
+     * @param orderToProductParamList 产品参数列表
+     */
+    void subNumber(List<OrderToProductParam> orderToProductParamList);
+
+    /**
+     * 类别服务调用管理调用
+     *
+     * @param categoryId 类别id
+     * @return {@link Long}
+     */
+    Long categoryCount(Integer categoryId);
+
+    /**
+     * 保存商品信息
+     *  1.保存商品信息
+     *  2.保存商品图片信息
+     *  3.发送消息,es库进行插入
+     * @param productSaveParam 产品保存参数
+     * @return {@link R}
+     */
+    R saveProduct(ProductSaveParam productSaveParam);
+
+    /**
+     * 更新产品信息
+     *
+     * @param product 产品
+     * @return {@link R}
+     */
+    R updateProduct(Product product);
+
+    /**
+     * 删除产品, 后台管理调用
+     *
+     * @param productId 产品id
+     * @return {@link R}
+     */
+    R removeProduct(Integer productId);
 }

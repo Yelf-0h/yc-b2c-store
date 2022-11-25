@@ -30,7 +30,6 @@ public class Address implements Serializable {
     private String phone;
     @NotBlank
     private String address;
-    @NotNull
     @TableField("user_id")
     private Integer userId;
 }
