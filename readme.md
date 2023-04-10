@@ -1,5 +1,7 @@
 # 代码使用说明(本项目来自[b站](https://www.bilibili.com/)/[尚硅谷](https://space.bilibili.com/302417610)/[计算机毕业设计丨10小时搞定B2C电商毕设项目](https://www.bilibili.com/video/BV1x14y1p73e)，仅供学习参考)
 
+## 注意本项目后台登录时有加盐，盐为ye@cheng，所以数据库admin_user的md5密码有所变动，明文密码还是admin123，密文变为69DC444AF62BF81F1054AD74DBBCFA58
+
 注意事项：
 - 具体笔记请参考[硅谷电商毕设项目_微服务版本](https://www.wolai.com/atguigu/m4z5zhigfZdUSvfTUJvYZM)
 - 项目代码包含2个分支
