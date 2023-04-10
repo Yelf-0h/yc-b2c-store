@@ -295,6 +295,6 @@ CREATE TABLE `admin_user` (
 
 /*Data for the table `admin_user` */
 
-insert  into `admin_user`(`user_id`,`user_name`,`user_account`,`user_password`,`user_phone`,`create_time`,`user_role`) values (1,'老板','admin123','532cd23c0816d6118d35323bff58a52','18514592456','2022-11-11',0);
+insert  into `admin_user`(`user_id`,`user_name`,`user_account`,`user_password`,`user_phone`,`create_time`,`user_role`) values (1,'老板','admin123','69DC444AF62BF81F1054AD74DBBCFA58','18514592456','2022-11-11',0);
 
 
